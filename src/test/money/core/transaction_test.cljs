@@ -12,6 +12,9 @@
         usd-10 {::le/account-id 0
                 ::le/amount {::m/amount -10 ::m/currency-id 0}
                 ::le/owner-id 0}
+        usd-10-other-owner {::le/account-id 0
+                            ::le/amount {::m/amount -10 ::m/currency-id 0}
+                            ::le/owner-id 1}
         usd0 {::le/account-id 0
               ::le/amount {::m/amount 0 ::m/currency-id 0}
               ::le/owner-id 0}
@@ -45,6 +48,11 @@
       (is (t/transaction-valid? (make-trans [usd0 chf0])))
       (is (t/transaction-valid? (make-trans [usd10 usd-10 chf10 chf-10])))
       (is (not (t/transaction-valid? (make-trans [usd-10 chf10])))))
+
+    (testing
+      (str "In a multi-owner transaction the entries of each owner need to sum "
+           "up to 0 individually per currency")
+      (is (not (t/transaction-valid? (make-trans [usd10 usd-10-other-owner])))))
 
     (testing "Transaction needs to satisfy specs"
       (is (not (t/transaction-valid?

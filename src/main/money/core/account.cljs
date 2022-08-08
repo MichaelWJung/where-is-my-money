@@ -2,13 +2,14 @@
   (:require [cljs.spec.alpha :as s]))
 
 ; trading account is for multi-currency transactions
+; TODO: use keywords without namespaces instead
 (def account-type? #{::asset ::liability ::equity ::income ::expense ::trading})
 
 (def link-type? #{::identical ::mirrored})
 
 (s/def ::name string?)
 (s/def ::currency-id int?)
-(s/def ::parent-id int?)
+(s/def ::parent-id (s/nilable int?))
 (s/def ::owner-id int?)
 (s/def ::type account-type?)
 (s/def ::linked-account-id int?)
@@ -22,10 +23,16 @@
       (and linked-account-id? link-type?)
       true)))
 
+(defn sorted-map? [m]
+  (instance? cljs.core/PersistentTreeMap m))
+
 (s/def ::account
   (s/and (s/keys :req [::name ::currency-id ::parent-id ::owner-id ::type]
           :opt [::linked-account-id ::link-type])
          link-defined-properly?))
+
+(s/def ::accounts
+  (s/map-of int? ::account :kind sorted-map?))
 
 (s/def ::virtual-account
   (s/keys :req [::name ::account-id-pair ::parent-id]))

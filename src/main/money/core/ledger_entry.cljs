@@ -5,10 +5,9 @@
 (s/def ::account-id int?)
 (s/def ::amount ::m/money)
 (s/def ::description string?)
-(s/def ::owner-id int?)
 
 (s/def ::ledger-entry
-  (s/keys :req [::account-id ::amount ::owner-id]
+  (s/keys :req [::account-id ::amount]
           :opt [::description]))
 (s/def ::ledger-entries
   (s/coll-of ::ledger-entry :kind vector?))

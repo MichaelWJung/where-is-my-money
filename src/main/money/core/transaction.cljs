@@ -1,5 +1,6 @@
 (ns money.core.transaction
   (:require [cljs.spec.alpha :as s]
+            [money.core.account :as a]
             [money.core.ledger-entry :as le]
             [money.core.money :as m]))
 
@@ -21,10 +22,19 @@
         sums (map sum-up-single-currency by-currencies)]
     (every? #(zero? (::m/amount %)) sums)))
 
-(defn transaction-valid? [transaction]
+(defn- get-entry-owner-id [entry accounts]
+  (get-in accounts [(::le/account-id entry) ::a/owner-id]))
+
+(defn transaction-valid? [transaction accounts]
   (if-not (s/valid? ::transaction transaction)
     false
     (let [entries (::le/ledger-entries transaction)
-          by-owner (group-by ::le/owner-id entries)]
-      (every? true? (map single-owner-entries-valid? (vals by-owner))))))
+
+          entries-with-owners
+          (map #(vector (get-entry-owner-id % accounts) %) entries)
+
+          entries-by-owner
+          (map #(map second %) (vals (group-by first entries-with-owners)))]
+
+      (every? true? (map single-owner-entries-valid? entries-by-owner)))))
 

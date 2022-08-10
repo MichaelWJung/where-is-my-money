@@ -33,6 +33,13 @@
                       ::a/parent-id nil
                       ::a/owner-id 0
                       ::a/type ::a/expense}
+                   2 {::a/name "Shared Checkings Account"
+                      ::a/currency-id 0
+                      ::a/parent-id nil
+                      ::a/owner-id 0
+                      ::a/type ::a/asset
+                      ::a/linked-account-id 102
+                      ::a/link-type ::a/identical}
                    10 {::a/name "Cash CHF"
                        ::a/currency-id 1
                        ::a/parent-id nil
@@ -42,7 +49,14 @@
                         ::a/currency-id 0
                         ::a/parent-id nil
                         ::a/owner-id 1
-                        ::a/type ::a/asset})
+                        ::a/type ::a/asset}
+                   102 {::a/name "Shared Checkings Account"
+                        ::a/currency-id 0
+                        ::a/parent-id nil
+                        ::a/owner-id 1
+                        ::a/type ::a/asset
+                        ::a/linked-account-id 2
+                        ::a/link-type ::a/identical})
 
         transaction
         {::t/id 0
@@ -71,6 +85,16 @@
            "up to 0 individually per currency")
       (is (not (t/transaction-valid?
                  (make-trans [usd10 usd-10-other-owner]) accounts))))
+
+    (testing
+      (str "If an account has an identical link account, the ledger entries "
+           "need to be repeated for that account")
+      (let [t1 {::le/account-id 2
+                ::le/amount {::m/amount -10 ::m/currency-id 0}}
+            t2 {::le/account-id 102
+                ::le/amount {::m/amount -10 ::m/currency-id 0}}]
+        (is (not (t/transaction-valid?
+                   (make-trans [usd10 t1]) accounts)))))
 
     (testing "Transaction needs to satisfy specs"
       (is (not (t/transaction-valid?

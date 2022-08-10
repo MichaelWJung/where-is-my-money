@@ -25,6 +25,14 @@
 (defn- get-entry-owner-id [entry accounts]
   (get-in accounts [(::le/account-id entry) ::a/owner-id]))
 
+(defn- satisfies-link? [entry entries accounts]
+  (let [account (get accounts (::le/account-id entry))]
+    (if-not (contains? account ::a/linked-account-id)
+      true
+      (let [linked-id (::a/linked-account-id account)
+            by-acc-id (group-by ::a/account-id entries)]
+        (contains? by-acc-id linked-id)))))
+
 (defn transaction-valid? [transaction accounts]
   (if-not (s/valid? ::transaction transaction)
     false
@@ -36,5 +44,6 @@
           entries-by-owner
           (map #(map second %) (vals (group-by first entries-with-owners)))]
 
-      (every? true? (map single-owner-entries-valid? entries-by-owner)))))
+      (and (every? single-owner-entries-valid? entries-by-owner)
+           (every? #(satisfies-link? % entries accounts) entries)))))
 

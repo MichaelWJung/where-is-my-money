@@ -93,12 +93,24 @@
     (testing
       (str "If an account has an identical link account, the ledger entries "
            "need to be repeated for that account")
-      (let [t1 {::le/account-id 2
-                ::le/amount {::m/amount -10 ::m/currency-id 0}}
-            t2 {::le/account-id 102
-                ::le/amount {::m/amount -10 ::m/currency-id 0}}]
+      (let [with-link-usd10 {::le/account-id 2
+                          ::le/amount {::m/amount 10 ::m/currency-id 0}}
+            linked-usd10 {::le/account-id 102
+                        ::le/amount {::m/amount 10 ::m/currency-id 0}}
+            linked-usd0 {::le/account-id 102
+                       ::le/amount {::m/amount 0 ::m/currency-id 0}}]
+        (is (t/transaction-valid?
+              (make-trans [usd-10 usd-10-other-owner
+                           with-link-usd10 linked-usd10])
+              accounts))
         (is (not (t/transaction-valid?
-                   (make-trans [usd10 t1]) accounts)))))
+                   (make-trans [usd-10 with-link-usd10]) accounts)))
+        (is (not (t/transaction-valid?
+                   (make-trans [usd-10 with-link-usd10 linked-usd0]) accounts)))
+        (is (not (t/transaction-valid?
+                   (make-trans [usd-10 usd-10 usd-10-other-owner
+                                with-link-usd10 linked-usd10 with-link-usd10])
+                   accounts)))))
 
     (testing "Transaction needs to satisfy specs"
       (is (not (t/transaction-valid?

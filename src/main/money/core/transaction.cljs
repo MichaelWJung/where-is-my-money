@@ -26,12 +26,17 @@
   (get-in accounts [(::le/account-id entry) ::a/owner-id]))
 
 (defn- satisfies-link? [entry entries accounts]
-  (let [account (get accounts (::le/account-id entry))]
+  (let [account-id (::le/account-id entry)
+        account (get accounts account-id)]
     (if-not (contains? account ::a/linked-account-id)
       true
       (let [linked-id (::a/linked-account-id account)
-            by-acc-id (group-by ::le/account-id entries)]
-        (contains? by-acc-id linked-id)))))
+            by-acc-id (group-by ::le/account-id entries)
+            amounts-in-current-account (map ::le/amount (get by-acc-id account-id))]
+        (if-let [amounts-in-linked-account (map ::le/amount (get by-acc-id linked-id))]
+          (= (frequencies amounts-in-current-account)
+             (frequencies amounts-in-linked-account))
+          false)))))
 
 (defn- referenced-accounts-exist? [entries accounts]
   (let [account-ids (map ::le/account-id entries)]

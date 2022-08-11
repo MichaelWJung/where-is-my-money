@@ -33,17 +33,21 @@
             by-acc-id (group-by ::a/account-id entries)]
         (contains? by-acc-id linked-id)))))
 
+(defn- referenced-accounts-exist? [entries accounts]
+  (let [account-ids (map ::le/account-id entries)]
+    (every? #(contains? accounts %) account-ids)))
+
+(defn- check-per-owner-and-currency-balances [entries accounts]
+  (let [entries-with-owners
+        (map #(vector (get-entry-owner-id % accounts) %) entries)
+        entries-by-owner
+        (map #(map second %) (vals (group-by first entries-with-owners)))]
+    (every? single-owner-entries-valid? entries-by-owner)))
+
 (defn transaction-valid? [transaction accounts]
-  (if-not (s/valid? ::transaction transaction)
-    false
-    (let [entries (::le/ledger-entries transaction)
-
-          entries-with-owners
-          (map #(vector (get-entry-owner-id % accounts) %) entries)
-
-          entries-by-owner
-          (map #(map second %) (vals (group-by first entries-with-owners)))]
-
-      (and (every? single-owner-entries-valid? entries-by-owner)
-           (every? #(satisfies-link? % entries accounts) entries)))))
+  (let [entries (::le/ledger-entries transaction)]
+    (and (s/valid? ::transaction transaction)
+         (referenced-accounts-exist? entries accounts)
+         (check-per-owner-and-currency-balances entries accounts)
+         (every? #(satisfies-link? % entries accounts) entries))))
 

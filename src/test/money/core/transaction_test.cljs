@@ -65,6 +65,10 @@
         make-trans
         (fn [entries] (assoc transaction ::le/ledger-entries entries))]
 
+    (testing "Referenced accounts need to exist"
+      (is (not (t/transaction-valid? (make-trans [usd10 usd-10])
+                                     (dissoc accounts 0)))))
+
     (testing "Single-currency transaction needs to sum up to 0 to be valid"
       (is (t/transaction-valid? (make-trans [usd10 usd-10]) accounts))
       (is (t/transaction-valid? (make-trans []) accounts))

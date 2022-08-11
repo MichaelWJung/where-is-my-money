@@ -30,7 +30,7 @@
     (if-not (contains? account ::a/linked-account-id)
       true
       (let [linked-id (::a/linked-account-id account)
-            by-acc-id (group-by ::a/account-id entries)]
+            by-acc-id (group-by ::le/account-id entries)]
         (contains? by-acc-id linked-id)))))
 
 (defn- referenced-accounts-exist? [entries accounts]

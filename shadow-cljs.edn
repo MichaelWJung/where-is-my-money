@@ -5,11 +5,21 @@
   "src/test"]
 
  :dependencies
- []
+ [[reagent "1.0.0"]
+  [re-frame "1.3.0-rc3"]]
+
+ :dev-http
+ {8280 "desktop/resources/public"}
 
  :builds
  {:test
   {:target    :node-test
    :output-to "out/node-tests.js"
    :ns-regexp "-test$"
-   :autorun   true}}}
+   :autorun   true}
+  :desktop
+  {:target     :browser
+   :output-dir "desktop/resources/public/js"
+   :modules
+   {:client
+    {:init-fn money.desktop.core/run}}}}}

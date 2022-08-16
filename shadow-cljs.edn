@@ -1,12 +1,13 @@
 ;; shadow-cljs configuration
 {:source-paths
- ["src/dev"
-  "src/main"
+ ["src/main"
+  "src/stories"
   "src/test"]
 
  :dependencies
  [[reagent "1.0.0"]
-  [re-frame "1.3.0-rc3"]]
+  [re-frame "1.3.0-rc3"]
+  [arttuka/reagent-material-ui "5.6.2-1"]]
 
  :dev-http
  {8280 "desktop/resources/public"}
@@ -17,9 +18,15 @@
    :output-to "out/node-tests.js"
    :ns-regexp "-test$"
    :autorun   true}
+
   :desktop
   {:target     :browser
    :output-dir "desktop/resources/public/js"
    :modules
    {:client
-    {:init-fn money.desktop.core/run}}}}}
+    {:init-fn money.desktop.core/run}}}
+
+  :stories
+  {:target :npm-module
+   :ns-regexp "-stories$"
+   :output-dir "desktop/resources/public/js/stories"}}}

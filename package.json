@@ -18,5 +18,10 @@
     "@mui/x-date-pickers": "5.0.0-alpha.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1"
+  },
+  "scripts": {
+    "storybook": "npx start-storybook",
+    "transpile": "npx babel src/js --out-dir src/gen --presets=@babel/preset-react",
+    "transpile-dev": "npx babel src/js --out-dir src/gen --watch --presets=@babel/preset-react"
   }
 }

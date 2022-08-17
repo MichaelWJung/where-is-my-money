@@ -1,11 +1,11 @@
 (ns money.desktop.core
-  (:require [reagent.dom]
-            [re-frame.core :as rf]))
+  (:require [money.desktop.components :as c]
+            [re-frame.core :as rf]
+            [reagent.dom]))
 
 (defn ui
   []
-  [:div
-   [:h1 "Hello world!"]])
+  [c/ledger])
 
 (defn render
   []

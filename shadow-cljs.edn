@@ -1,7 +1,7 @@
 ;; shadow-cljs configuration
 {:source-paths
  ["src/main"
-  "src/stories"
+  "src/gen"
   "src/test"]
 
  :dependencies

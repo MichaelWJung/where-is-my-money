@@ -24,9 +24,4 @@
    :output-dir "desktop/resources/public/js"
    :modules
    {:client
-    {:init-fn money.desktop.core/run}}}
-
-  :stories
-  {:target :npm-module
-   :ns-regexp "-stories$"
-   :output-dir "desktop/resources/public/js/stories"}}}
+    {:init-fn money.desktop.core/run}}}}}

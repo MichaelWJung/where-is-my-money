@@ -28,14 +28,7 @@ export default function Ledger(props) {
             <TableCell>Salary</TableCell>
             <TableCell>Income:Salary</TableCell>
             <TableCell align="right">
-              <TextField defaultValue="5000.00"
-                         variant="filled"
-                         size="small"
-                         hiddenLabel
-                         InputProps={{startAdornment:
-                                       <InputAdornment position="start">
-                                       $
-                                       </InputAdornment>}}/>
+              <input type="text" value="5000.00" class="ledger-number"/>
             </TableCell>
             <TableCell align="right"></TableCell>
             <TableCell align="right">5000.00</TableCell>

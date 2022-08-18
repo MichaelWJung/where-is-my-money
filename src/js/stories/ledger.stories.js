@@ -10,4 +10,9 @@ export default {
   component: Ledger,
 };
 
-export const AccountOverview = () => <Ledger />;
+const Template = (args) => <Ledger {...args} />;
+
+export const AccountOverview = Template.bind({});
+AccountOverview.args = {
+  active: true
+};

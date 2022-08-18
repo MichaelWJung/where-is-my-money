@@ -1,5 +1,5 @@
 (ns money.desktop.components
   (:require [reagent.core :as r]
-            ["/components/ledger" :as l]))
+            ["/components/ledger$default" :as Ledger]))
 
-(def ledger (r/adapt-react-class (.-default l)))
+(def ledger (r/adapt-react-class Ledger))

@@ -3,9 +3,27 @@
             [re-frame.core :as rf]
             [reagent.dom]))
 
+(rf/reg-event-db
+ :initialize
+ (fn [_ _]
+   {:color "red"}))
+
+(rf/reg-event-db
+ :change-color
+ (fn [db [_ new-color-value]]
+   (assoc db :color new-color-value)))
+
+(rf/reg-sub
+ :color
+ (fn [db _]
+   (:color db)))
+
 (defn ui
   []
-  [c/ledger])
+  [:<>
+   [c/ledger-input {:value @(rf/subscribe [:color])
+                    :on-change #(rf/dispatch-sync [:change-color %])}]
+   [:p {:style {:color @(rf/subscribe [:color])}} "I haz color"]])
 
 (defn render
   []

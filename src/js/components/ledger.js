@@ -1,5 +1,7 @@
 import React from "react";
+import PropTypes from "prop-types";
 
+import LedgerRow from './ledger_row';
 import InputAdornment from '@mui/material/InputAdornment';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,33 +25,28 @@ export default function Ledger(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          <TableRow key="0">
-            <TableCell>12/31/20</TableCell>
-            <TableCell>Salary</TableCell>
-            <TableCell>Income:Salary</TableCell>
-            <TableCell align="right">
-              <input type="text" value="5000.00" class="ledger-number"/>
-            </TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right">5000.00</TableCell>
-          </TableRow>
-          <TableRow key="1">
-            <TableCell>01/03/21</TableCell>
-            <TableCell>Grocerie shopping</TableCell>
-            <TableCell>Expenses:Groceries</TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right">21.28</TableCell>
-            <TableCell align="right">4978.72</TableCell>
-          </TableRow>
-          <TableRow key="2">
-            <TableCell>01/13/21</TableCell>
-            <TableCell>Cinema</TableCell>
-            <TableCell>Expenses:Entertainment</TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right">32.00</TableCell>
-            <TableCell align="right">4946.72</TableCell>
-          </TableRow>
+          {props.data.map(rowData => (
+            <LedgerRow
+              date={rowData.date}
+              description={rowData.description}
+              transfer={rowData.transfer}
+              debit={rowData.debit}
+              credit={rowData.credit}
+              balance={rowData.balance}
+              key={rowData.key}
+              edit={rowData.key === props.edit} />
+          ))}
         </TableBody>
       </Table>
     </TableContainer>;
 }
+
+Ledger.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  edit: PropTypes.number,
+};
+
+Ledger.defaultProps = {
+  data: [],
+  edit: null,
+};

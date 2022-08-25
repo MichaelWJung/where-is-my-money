@@ -16,7 +16,7 @@ const Template = (args) => {
       }}
       value={value}
     />);
-}
+};
 
 export const Normal = Template.bind({});
 Normal.args = {

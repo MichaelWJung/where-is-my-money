@@ -23,16 +23,10 @@
       (and linked-account-id? link-type?)
       true)))
 
-(defn sorted-map? [m]
-  (instance? cljs.core/PersistentTreeMap m))
-
 (s/def ::account
   (s/and (s/keys :req [::name ::currency-id ::parent-id ::owner-id ::type]
           :opt [::linked-account-id ::link-type])
          link-defined-properly?))
-
-(s/def ::accounts
-  (s/map-of int? ::account :kind sorted-map?))
 
 (s/def ::virtual-account
   (s/keys :req [::name ::account-id-pair ::parent-id]))

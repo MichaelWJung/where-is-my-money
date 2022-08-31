@@ -18,7 +18,4 @@
       (is (not (s/valid? ::a/account (assoc acc1 ::a/linked-account-id 2))))
       (is (not (s/valid? ::a/account (assoc acc1 ::a/link-type ::a/mirrored)))))
 
-    (testing "Accounts need to be in a sorted map"
-      (is (s/valid? ::a/accounts (sorted-map 0 acc1 1 acc1)))
-      (is (not (s/valid? ::a/accounts {0 acc1 1 acc1}))))
     ))

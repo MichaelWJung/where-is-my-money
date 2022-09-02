@@ -13,7 +13,7 @@
 (s/def ::currencies
   (s/map-of int? ::c/currency :kind sorted-map?))
 (s/def ::owners
-  (s/map-of int? ::o/owners :kind sorted-map?))
+  (s/map-of int? ::o/owner :kind sorted-map?))
 (s/def ::transactions
   (s/map-of int? ::t/transaction :kind sorted-map?))
 

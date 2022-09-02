@@ -4,12 +4,13 @@
             [money.core.ledger-entry :as le]
             [money.core.money :as m]))
 
-(s/def ::id int?)
 (s/def ::description string?)
 (s/def ::date int?) ; unix time
+(s/def ::ledger-entries
+  (s/coll-of ::le/ledger-entry :kind vector?))
 
 (s/def ::transaction
-  (s/keys :req [::id ::description ::le/ledger-entries]))
+  (s/keys :req [::description ::date ::ledger-entries]))
 
 (defn- single-owner-entries-valid? [entries]
   (let [amounts (map ::le/amount entries)
@@ -50,7 +51,7 @@
     (every? single-owner-entries-valid? entries-by-owner)))
 
 (defn transaction-valid? [transaction accounts]
-  (let [entries (::le/ledger-entries transaction)]
+  (let [entries (::ledger-entries transaction)]
     (and (s/valid? ::transaction transaction)
          (referenced-accounts-exist? entries accounts)
          (check-per-owner-and-currency-balances entries accounts)

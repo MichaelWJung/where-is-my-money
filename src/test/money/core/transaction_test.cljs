@@ -59,11 +59,11 @@
                         ::a/link-type ::a/identical})
 
         transaction
-        {::t/id 0
+        {::t/date 0
          ::t/description "Groceries"}
 
         make-trans
-        (fn [entries] (assoc transaction ::le/ledger-entries entries))]
+        (fn [entries] (assoc transaction ::t/ledger-entries entries))]
 
     (testing "Referenced accounts need to exist"
       (is (not (t/transaction-valid? (make-trans [usd10 usd-10])

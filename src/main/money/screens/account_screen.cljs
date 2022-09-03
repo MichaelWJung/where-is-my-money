@@ -10,7 +10,13 @@
   (some #(= (::le/account-id %) account-id) entries))
 
 (defn filter-transactions-by-account [transactions account-id]
-  (into {} (filter #(-> %
-                        get-ledger-entries
-                        (ledger-entries-contain-account? account-id))
-                   transactions)))
+  (filter #(-> %
+               get-ledger-entries
+               (ledger-entries-contain-account? account-id))
+          transactions))
+
+(defn- get-date [[k v]]
+  (::t/date v))
+
+(defn sort-transactions-by-date [transactions]
+  (sort-by get-date transactions))

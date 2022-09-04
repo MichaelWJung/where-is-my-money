@@ -2,8 +2,11 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import LedgerInput from "./ledger_input";
-import TableCell from '@mui/material/TableCell';
-import TableRow from '@mui/material/TableRow';
+import TableCellLoad from '@mui/material/TableCell';
+import TableRowLoad from '@mui/material/TableRow';
+
+const TableCell = TableCellLoad.default ? TableCellLoad.default : TableCellLoad;
+const TableRow = TableRowLoad.default ? TableRowLoad.default : TableRowLoad;
 
 const noop = (e) => null;
 

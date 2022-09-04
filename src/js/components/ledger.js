@@ -2,14 +2,20 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import LedgerRow from './ledger_row';
-import InputAdornment from '@mui/material/InputAdornment';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import TextField from '@mui/material/TextField';
+import TableLoad from '@mui/material/Table';
+import TableBodyLoad from '@mui/material/TableBody';
+import TableCellLoad from '@mui/material/TableCell';
+import TableContainerLoad from '@mui/material/TableContainer';
+import TableHeadLoad from '@mui/material/TableHead';
+import TableRowLoad from '@mui/material/TableRow';
+
+const Table = TableLoad.default ? TableLoad.default : TableLoad;
+const TableBody = TableBodyLoad.default ? TableBodyLoad.default : TableBodyLoad;
+const TableCell = TableCellLoad.default ? TableCellLoad.default : TableCellLoad;
+const TableContainer =
+  TableContainerLoad.default ? TableContainerLoad.default : TableContainerLoad;
+const TableHead = TableHeadLoad.default ? TableHeadLoad.default : TableHeadLoad;
+const TableRow = TableRowLoad.default ? TableRowLoad.default : TableRowLoad;
 
 export default function Ledger(props) {
   return <TableContainer>

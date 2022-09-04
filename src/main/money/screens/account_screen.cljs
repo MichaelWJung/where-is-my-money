@@ -1,6 +1,7 @@
 (ns money.screens.account-screen
   (:require [money.core.account :as a]
             [money.core.ledger-entry :as le]
+            [money.core.money :as m]
             [money.core.transaction :as t]))
 
 (defn- get-ledger-entries [[k v]]
@@ -42,3 +43,19 @@
     (flatten (map #(create-modified-account-screen-transaction
                      (second %) account-id)
                   transactions))))
+
+(defn get-account-screen-data [transactions account-id]
+  (let [screen-transactions (build-account-screen-transactions
+                              transactions account-id)]
+    (reduce
+      (fn [running transaction]
+        (let [balance (if (empty? running)
+                        {::m/amount 0 ::m/currency-id 0}
+                        (:balance (peek running)))
+              new (assoc transaction :balance
+                         (m/add-money balance
+                                      (get-in transaction [:account-ledger-entry
+                                                           ::le/amount])))]
+          (conj running new)))
+      []
+      screen-transactions)))

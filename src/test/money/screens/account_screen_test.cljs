@@ -107,3 +107,26 @@
              ::t/date 3000000
              :account-ledger-entry (ledger-entry 3 2230)
              :other-ledger-entries [(ledger-entry 6 -2230)]}]))))
+
+(deftest get-account-screen-data-test
+  (testing
+    (str "Collects all modified transactions from originating from incoming "
+         "transactions")
+    (is (= (as/get-account-screen-data transactions 3)
+           [{::t/description "Playing pinball"
+             ::t/date 2000000
+             :account-ledger-entry (ledger-entry 3 1000)
+             :other-ledger-entries [(ledger-entry 3 200)
+                                    (ledger-entry 6 -1200)]
+             :balance {::m/amount 1000 ::m/currency-id 0}}
+            {::t/description "Playing pinball"
+             ::t/date 2000000
+             :account-ledger-entry (ledger-entry 3 200)
+             :other-ledger-entries [(ledger-entry 3 1000)
+                                    (ledger-entry 6 -1200)]
+             :balance {::m/amount 1200 ::m/currency-id 0}}
+            {::t/description "Cinema"
+             ::t/date 3000000
+             :account-ledger-entry (ledger-entry 3 2230)
+             :other-ledger-entries [(ledger-entry 6 -2230)]
+             :balance {::m/amount 3430 ::m/currency-id 0}}]))))

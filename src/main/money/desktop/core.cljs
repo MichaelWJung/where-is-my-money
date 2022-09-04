@@ -1,29 +1,65 @@
 (ns money.desktop.core
   (:require [money.desktop.components :as c]
+            [money.core.app-data :as d]
+            [money.core.app-data-test :refer (test-data)]
+            [money.screens.account-screen :as as]
+            [money.desktop.presenters.account-screen-presenters :as asp]
             [re-frame.core :as rf]
             [reagent.dom]))
 
 (rf/reg-event-db
  :initialize
  (fn [_ _]
-   {:color "red"}))
+   {:app-data test-data
+    :account-id 4}))
 
 (rf/reg-event-db
- :change-color
- (fn [db [_ new-color-value]]
-   (assoc db :color new-color-value)))
+ :change-account
+ (fn [db [_ new-account-id]]
+   (assoc db :account-id new-account-id)))
 
 (rf/reg-sub
- :color
- (fn [db _]
-   (:color db)))
+  :account-id
+  (fn [db _]
+    (:account-id db)))
 
-(defn ui
-  []
-  [:<>
-   [c/ledger-input {:value @(rf/subscribe [:color])
-                    :on-change #(rf/dispatch-sync [:change-color %])}]
-   [:p {:style {:color @(rf/subscribe [:color])}} "I haz color"]])
+(rf/reg-sub
+ :app-data
+ (fn [db _]
+   (:app-data db)))
+
+(rf/reg-sub
+  :accounts
+  :<- [:app-data]
+  (fn [app-data _]
+    (::d/accounts app-data)))
+
+(rf/reg-sub
+  :transactions
+  :<- [:app-data]
+  (fn [app-data _]
+    (::d/transactions app-data)))
+
+(rf/reg-sub
+  :account-transactions
+  :<- [:transactions]
+  (fn [transactions [_ account-id]]
+    (as/filter-transactions-by-account transactions @account-id)))
+
+(rf/reg-sub
+  :presented-account-screen-data
+  (fn [_ _]
+    (let [account-id (rf/subscribe [:account-id])]
+      [(rf/subscribe [:account-transactions account-id])
+       (rf/subscribe [:accounts])
+       account-id]))
+  (fn [[transactions accounts account-id] _]
+    (asp/present-account-screen transactions accounts account-id)))
+
+(defn ui []
+  (let [data (rf/subscribe [:presented-account-screen-data])]
+    [:<>
+     [c/ledger {:data @data}]]))
 
 (defn render
   []
